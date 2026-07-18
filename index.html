@@ -52,14 +52,15 @@
   .sec-head span{display:block;font-family:var(--font-m);font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--sky-deep);margin-bottom:5px}
   .sec-head p{color:var(--ink-soft);font-size:14px;margin-top:4px;max-width:760px}
 
-  /* ---------- KPI cards ---------- */
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-bottom:28px}
-  .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;position:relative}
-  .kpi .lbl{font-size:12.5px;font-weight:600;color:var(--ink-soft);min-height:34px}
-  .kpi .val{font-family:var(--font-m);font-size:28px;font-weight:600;margin-top:6px;letter-spacing:-.02em}
-  .kpi .base{font-family:var(--font-m);font-size:12px;color:var(--ink-soft);margin-top:3px}
-  .kpi .chip{position:absolute;top:14px;right:14px;font-family:var(--font-m);font-size:11.5px;font-weight:600;color:var(--pos);background:#e7f5ee;border-radius:999px;padding:3px 8px}
+  /* ---------- KPI cards (chip inline so labels never get covered) ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:28px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 15px;display:flex;flex-direction:column;gap:6px}
+  .kpi .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .kpi .lbl{font-size:12.5px;font-weight:600;color:var(--ink-soft);line-height:1.35}
+  .kpi .chip{flex-shrink:0;font-family:var(--font-m);font-size:11px;font-weight:600;color:var(--pos);background:#e7f5ee;border-radius:999px;padding:3px 9px;white-space:nowrap}
   .kpi .chip.new{color:var(--sky-deep);background:var(--mist)}
+  .kpi .val{font-family:var(--font-m);font-size:27px;font-weight:600;letter-spacing:-.02em}
+  .kpi .base{font-family:var(--font-m);font-size:12px;color:var(--ink-soft)}
 
   /* ---------- charts ---------- */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -87,13 +88,6 @@
   .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
   .legend .b i{background:var(--sand)}
   .legend .c i{background:var(--sky-deep)}
-
-  table.simple{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
-  table.simple th{text-align:left;font-family:var(--font-m);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);padding:8px 10px;border-bottom:2px solid var(--line)}
-  table.simple td{padding:9px 10px;border-bottom:1px solid var(--mist)}
-  table.simple td.num{font-family:var(--font-m);text-align:right}
-  table.simple tr.total td{font-weight:700;background:var(--mist)}
-  .up{color:var(--pos);font-weight:600}
 
   footer{text-align:center;font-size:12px;color:var(--ink-soft);padding:26px 20px;border-top:1px solid var(--line)}
   footer b{color:var(--ink)}
@@ -127,12 +121,12 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="lbl">Dhalinyaro ka faa'iidaystay shaqo-abuurka</div><div class="val">89,958</div><div class="base">2021: 7,708</div><div class="chip">×11.7</div></div>
-    <div class="kpi"><div class="lbl">Tababarro xirfadeed oo shahaado leh</div><div class="val">77,850</div><div class="base">2021: 28,550</div><div class="chip">×2.7</div></div>
-    <div class="kpi"><div class="lbl">Diiwaanka bulshada nugul</div><div class="val">750,000</div><div class="base">2021: 200,000</div><div class="chip">×3.8</div></div>
-    <div class="kpi"><div class="lbl">Wicitaanno hotline la diiwaangeliyay</div><div class="val">153,266</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
-    <div class="kpi"><div class="lbl">Shaqaalaha rayidka (aan joogto ahayn)</div><div class="val">9,759</div><div class="base">2021: 2,665</div><div class="chip">+266%</div></div>
-    <div class="kpi"><div class="lbl">Xarumaha TVET oo howlgal ah</div><div class="val">7</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Dhalinyaro ka faa'iidaystay shaqo-abuurka</div><div class="chip">×11.7</div></div><div class="val">89,958</div><div class="base">2021: 7,708</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Tababarro xirfadeed oo shahaado leh</div><div class="chip">×2.7</div></div><div class="val">77,850</div><div class="base">2021: 28,550</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Diiwaanka bulshada nugul</div><div class="chip">×3.8</div></div><div class="val">750,000</div><div class="base">2021: 200,000</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Wicitaanno hotline la diiwaangeliyay</div><div class="chip new">Cusub</div></div><div class="val">153,266</div><div class="base">2021: 0</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Shaqaalaha rayidka (aan joogto ahayn)</div><div class="chip">+266%</div></div><div class="val">9,759</div><div class="base">2021: 2,665</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Xarumaha TVET oo howlgal ah</div><div class="chip new">Cusub</div></div><div class="val">7</div><div class="base">2021: 0</div></div>
   </div>
 
   <div class="grid">
@@ -154,10 +148,10 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="lbl">Dhalinyaro ka faa'iidaystay shaqo-abuurka</div><div class="val">89,958</div><div class="base">2021: 7,708</div><div class="chip">×11.7</div></div>
-    <div class="kpi"><div class="lbl">SPDS — qoysas la gaarsiiyay adeegyo</div><div class="val">154,569</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
-    <div class="kpi"><div class="lbl">Khilaafaad shaqo oo la xalliyay</div><div class="val">700</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
-    <div class="kpi"><div class="lbl">Heshiisyo shaqo oo laba-geesood ah</div><div class="val">5</div><div class="base">2021: 1</div><div class="chip">×5</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Dhalinyaro ka faa'iidaystay shaqo-abuurka</div><div class="chip">×11.7</div></div><div class="val">89,958</div><div class="base">2021: 7,708</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">SPDS — qoysas la gaarsiiyay adeegyo</div><div class="chip new">Cusub</div></div><div class="val">154,569</div><div class="base">2021: 0</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Khilaafaad shaqo oo la xalliyay</div><div class="chip new">Cusub</div></div><div class="val">700</div><div class="base">2021: 0</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Heshiisyo shaqo oo laba-geesood ah</div><div class="chip">×5</div></div><div class="val">5</div><div class="base">2021: 1</div></div>
   </div>
 
   <div class="grid">
@@ -189,9 +183,9 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="lbl">Qaxooti iyo magangalyo-doon la diiwaangeliyay</div><div class="val">45,450</div><div class="base">2021: 30,066</div><div class="chip">+51%</div></div>
-    <div class="kpi"><div class="lbl">Balan-qaadyo caalami ah oo qaxootiga</div><div class="val">6</div><div class="base">2021: 4</div><div class="chip">+2</div></div>
-    <div class="kpi"><div class="lbl">Shuruuc la meel-mariyay</div><div class="val">2</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Qaxooti iyo magangalyo-doon la diiwaangeliyay</div><div class="chip">+51%</div></div><div class="val">45,450</div><div class="base">2021: 30,066</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Balan-qaadyo caalami ah oo qaxootiga</div><div class="chip">+2</div></div><div class="val">6</div><div class="base">2021: 4</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Shuruuc la meel-mariyay</div><div class="chip new">Cusub</div></div><div class="val">2</div><div class="base">2021: 0</div></div>
   </div>
 
   <div class="grid">
@@ -217,10 +211,10 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="lbl">Wicitaanno hotline la diiwaangeliyay</div><div class="val">153,266</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
-    <div class="kpi"><div class="lbl">Kiisas laga xalliyay wicitaannada</div><div class="val">181</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
-    <div class="kpi"><div class="lbl">Sharciyo xuquuqul-insaan ah</div><div class="val">15</div><div class="base">2021: 3</div><div class="chip">×5</div></div>
-    <div class="kpi"><div class="lbl">Qorshayaal iyo siyaasado cusub</div><div class="val">14</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Wicitaanno hotline la diiwaangeliyay</div><div class="chip new">Cusub</div></div><div class="val">153,266</div><div class="base">2021: 0</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Kiisas laga xalliyay wicitaannada</div><div class="chip new">Cusub</div></div><div class="val">181</div><div class="base">2021: 0</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Sharciyo xuquuqul-insaan ah</div><div class="chip">×5</div></div><div class="val">15</div><div class="base">2021: 3</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Qorshayaal iyo siyaasado cusub</div><div class="chip new">Cusub</div></div><div class="val">14</div><div class="base">2021: 0</div></div>
   </div>
 
   <div class="grid">
@@ -246,10 +240,10 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="lbl">Wadarta shaqaalaha aan joogtada ahayn</div><div class="val">9,759</div><div class="base">2021: 2,665</div><div class="chip">+266%</div></div>
-    <div class="kpi"><div class="lbl">Macalimiin — Gobolka Banaadir</div><div class="val">2,308</div><div class="base">2021: 935</div><div class="chip">+147%</div></div>
-    <div class="kpi"><div class="lbl">Haween ka mid ah shaqaalaha</div><div class="val">3,123</div><div class="base">2021: 894</div><div class="chip">×3.5</div></div>
-    <div class="kpi"><div class="lbl">Shaqaalaha joogtada ah (wadarta)</div><div class="val">5,838</div><div class="base">2021: 5,739</div><div class="chip">+99</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Wadarta shaqaalaha aan joogtada ahayn</div><div class="chip">+266%</div></div><div class="val">9,759</div><div class="base">2021: 2,665</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Macalimiin — Gobolka Banaadir</div><div class="chip">+147%</div></div><div class="val">2,308</div><div class="base">2021: 935</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Haween ka mid ah shaqaalaha</div><div class="chip">×3.5</div></div><div class="val">3,123</div><div class="base">2021: 894</div></div>
+    <div class="kpi"><div class="top"><div class="lbl">Shaqaalaha joogtada ah (wadarta)</div><div class="chip">+99</div></div><div class="val">5,838</div><div class="base">2021: 5,739</div></div>
   </div>
 
   <div class="grid">
@@ -265,13 +259,8 @@
     </div>
     <div class="card full">
       <h3>Shaqaalaha Joogtada ah — Jinsi</h3>
-      <div class="en">Permanent staff by gender, 2021 vs 2026</div>
-      <table class="simple">
-        <thead><tr><th>Tusmo</th><th style="text-align:right">Lab 2021</th><th style="text-align:right">Dhedig 2021</th><th style="text-align:right">Wadar 2021</th><th style="text-align:right">Lab 2026</th><th style="text-align:right">Dhedig 2026</th><th style="text-align:right">Wadar 2026</th><th style="text-align:right">Koror</th></tr></thead>
-        <tbody>
-          <tr class="total"><td>Shaqaalaha joogtada ah</td><td class="num">4,248</td><td class="num">1,491</td><td class="num">5,739</td><td class="num">4,311</td><td class="num">1,527</td><td class="num">5,838</td><td class="num up">+99</td></tr>
-        </tbody>
-      </table>
+      <div class="en">Permanent staff by gender, 2021 vs 2026 (+99 overall)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chCscPerm"></canvas></div>
     </div>
   </div>
 </section>
@@ -377,6 +366,7 @@ hbar('chCscCat',
   ['Shaqaale aan joogto ahayn','Macalimiin Banaadir','Marwo Caafimaad'],
   [1508,935,222],[7181,2308,270]);
 vbar('chCscGen',['Lab','Dhedig','Wadarta'],[1771,894,2665],[6636,3123,9759]);
+vbar('chCscPerm',['Lab','Dhedig','Wadarta'],[4248,1491,5739],[4311,1527,5838]);
 </script>
 </body>
 </html>
