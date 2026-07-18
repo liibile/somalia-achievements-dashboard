@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horumarka Dowladda 2021–2026 | Social Sector Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#0d1b2e;
+    --ink-soft:#3d4f66;
+    --sky:#3f88d4;          /* Somali blue */
+    --sky-deep:#1f5da8;
+    --sand:#c8b48a;
+    --mist:#eef3f9;
+    --paper:#fafcfe;
+    --line:#d7e1ec;
+    --pos:#1f8a5d;
+    --radius:14px;
+    --font-d:'Archivo',system-ui,sans-serif;
+    --font-m:'Spline Sans Mono','Courier New',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font-d);background:var(--paper);color:var(--ink);line-height:1.5}
+
+  /* ---------- header ---------- */
+  header{background:var(--ink);color:#fff;padding:34px 28px 30px;position:relative;overflow:hidden}
+  header::after{content:"★";position:absolute;right:-30px;top:-60px;font-size:260px;color:var(--sky);opacity:.12;line-height:1}
+  .eyebrow{font-family:var(--font-m);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--sky);margin-bottom:10px}
+  header h1{font-size:clamp(24px,4vw,40px);font-weight:800;letter-spacing:-.02em;max-width:820px}
+  header p.sub{margin-top:10px;color:#b9c6d6;max-width:720px;font-size:15px}
+  .period{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-family:var(--font-m);font-size:13px;background:rgba(63,136,212,.18);border:1px solid rgba(63,136,212,.45);padding:7px 14px;border-radius:999px}
+  .period b{color:#fff}
+
+  /* ---------- nav tabs ---------- */
+  nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding:0 18px}
+  nav button{appearance:none;border:none;background:none;font-family:var(--font-d);font-size:14px;font-weight:600;color:var(--ink-soft);padding:15px 14px 13px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+  nav button:hover{color:var(--ink)}
+  nav button.active{color:var(--sky-deep);border-bottom-color:var(--sky)}
+  nav button:focus-visible{outline:2px solid var(--sky);outline-offset:-2px}
+
+  main{max-width:1180px;margin:0 auto;padding:30px 20px 70px}
+  section.panel{display:none}
+  section.panel.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){section.panel.active{animation:none}}
+
+  .sec-head{margin-bottom:22px}
+  .sec-head h2{font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .sec-head span{display:block;font-family:var(--font-m);font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--sky-deep);margin-bottom:5px}
+  .sec-head p{color:var(--ink-soft);font-size:14px;margin-top:4px;max-width:760px}
+
+  /* ---------- KPI cards ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-bottom:28px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;position:relative}
+  .kpi .lbl{font-size:12.5px;font-weight:600;color:var(--ink-soft);min-height:34px}
+  .kpi .val{font-family:var(--font-m);font-size:28px;font-weight:600;margin-top:6px;letter-spacing:-.02em}
+  .kpi .base{font-family:var(--font-m);font-size:12px;color:var(--ink-soft);margin-top:3px}
+  .kpi .chip{position:absolute;top:14px;right:14px;font-family:var(--font-m);font-size:11.5px;font-weight:600;color:var(--pos);background:#e7f5ee;border-radius:999px;padding:3px 8px}
+  .kpi .chip.new{color:var(--sky-deep);background:var(--mist)}
+
+  /* ---------- charts ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .card.full{grid-column:1/-1}
+  .card h3{font-size:15px;font-weight:700;margin-bottom:2px}
+  .card .en{font-size:12px;color:var(--ink-soft);margin-bottom:14px}
+  .chart-wrap{position:relative}
+
+  /* ---------- dumbbell list (signature) ---------- */
+  .dumb{display:flex;flex-direction:column;gap:13px;margin-top:6px}
+  .drow{display:grid;grid-template-columns:minmax(150px,240px) 1fr auto;gap:12px;align-items:center}
+  .drow .dl{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+  .track{position:relative;height:8px;background:var(--mist);border-radius:99px}
+  .fill{position:absolute;left:0;top:0;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--sand),var(--sky));}
+  .dot-b,.dot-c{position:absolute;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1px var(--line)}
+  .dot-b{background:var(--sand)}
+  .dot-c{background:var(--sky-deep)}
+  .dnum{font-family:var(--font-m);font-size:12.5px;white-space:nowrap}
+  .dnum b{color:var(--sky-deep)}
+  .dnum s{text-decoration:none;color:var(--ink-soft)}
+
+  .legend{display:flex;gap:18px;font-size:12px;color:var(--ink-soft);margin-top:16px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+  .legend .b i{background:var(--sand)}
+  .legend .c i{background:var(--sky-deep)}
+
+  table.simple{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+  table.simple th{text-align:left;font-family:var(--font-m);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);padding:8px 10px;border-bottom:2px solid var(--line)}
+  table.simple td{padding:9px 10px;border-bottom:1px solid var(--mist)}
+  table.simple td.num{font-family:var(--font-m);text-align:right}
+  table.simple tr.total td{font-weight:700;background:var(--mist)}
+  .up{color:var(--pos);font-weight:600}
+
+  footer{text-align:center;font-size:12px;color:var(--ink-soft);padding:26px 20px;border-top:1px solid var(--line)}
+  footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Dowladda Federaalka Soomaaliya · Qaybta Bulshada</div>
+  <h1>Horumarka la Gaaray 2021–2026</h1>
+  <p class="sub">Muuqaal kooban oo tusaya guulaha ay gaareen wasaaradaha iyo hay'adaha qaybta bulshada, iyadoo la barbardhigayo halka laga bilaabay (2021) iyo halka la joogo (2026). Sample dashboard · xogta MDA-yada.</p>
+  <div class="period">BASELINE <b>2021</b> ─────────▶ CURRENT <b>2026</b></div>
+</header>
+
+<nav id="tabs">
+  <button data-p="overview" class="active">Guudmar</button>
+  <button data-p="labour">Wasaaradda Shaqada</button>
+  <button data-p="refugee">Hay'adda Qaxootiga</button>
+  <button data-p="family">Wasaaradda Qoyska</button>
+  <button data-p="csc">Guddiga Shaqaalaha</button>
+</nav>
+
+<main>
+
+<!-- ============ OVERVIEW ============ -->
+<section class="panel active" id="p-overview">
+  <div class="sec-head">
+    <span>Overview</span>
+    <h2>Guulaha ugu Waaweyn</h2>
+    <p>Afar hay'adood · 23 tusmo horumar. Tirooyinka hoose waa kuwa ugu saameynta badan.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Dhalinyaro ka faa'iidaystay shaqo-abuurka</div><div class="val">89,958</div><div class="base">2021: 7,708</div><div class="chip">×11.7</div></div>
+    <div class="kpi"><div class="lbl">Tababarro xirfadeed oo shahaado leh</div><div class="val">77,850</div><div class="base">2021: 28,550</div><div class="chip">×2.7</div></div>
+    <div class="kpi"><div class="lbl">Diiwaanka bulshada nugul</div><div class="val">750,000</div><div class="base">2021: 200,000</div><div class="chip">×3.8</div></div>
+    <div class="kpi"><div class="lbl">Wicitaanno hotline la diiwaangeliyay</div><div class="val">153,266</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="lbl">Shaqaalaha rayidka (aan joogto ahayn)</div><div class="val">9,759</div><div class="base">2021: 2,665</div><div class="chip">+266%</div></div>
+    <div class="kpi"><div class="lbl">Xarumaha TVET oo howlgal ah</div><div class="val">7</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card full">
+      <h3>Isbeddelka Tusmooyinka Waaweyn (2021 → 2026)</h3>
+      <div class="en">Change in headline indicators, log scale — baselines and current values differ by orders of magnitude</div>
+      <div class="chart-wrap" style="height:340px"><canvas id="chOverview"></canvas></div>
+      <div class="legend"><span class="b"><i></i>2021 (Bar bilow)</span><span class="c"><i></i>2026 (Halka la joogo)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LABOUR ============ -->
+<section class="panel" id="p-labour">
+  <div class="sec-head">
+    <span>Ministry of Labour &amp; Social Affairs</span>
+    <h2>Wasaaradda Shaqada iyo Arrimaha Bulshada</h2>
+    <p>12 tusmo: shaqo-abuur, tababar xirfadeed, badbaado bulsho iyo xeerar shaqo.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Dhalinyaro ka faa'iidaystay shaqo-abuurka</div><div class="val">89,958</div><div class="base">2021: 7,708</div><div class="chip">×11.7</div></div>
+    <div class="kpi"><div class="lbl">SPDS — qoysas la gaarsiiyay adeegyo</div><div class="val">154,569</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="lbl">Khilaafaad shaqo oo la xalliyay</div><div class="val">700</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="lbl">Heshiisyo shaqo oo laba-geesood ah</div><div class="val">5</div><div class="base">2021: 1</div><div class="chip">×5</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Caymiska iyo Adeegyada Bulshada</h3>
+      <div class="en">Social registry &amp; workforce programmes (people / households)</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chLabBig"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Nidaamyada iyo Dhaqaale-yarayaasha</h3>
+      <div class="en">Systems, dispute resolution &amp; SME financing</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chLabMid"></canvas></div>
+    </div>
+    <div class="card full">
+      <h3>Xeerar, Heshiisyo iyo Kaabayaal</h3>
+      <div class="en">Policies aligned with ILO, bilateral agreements, TVET centres &amp; initiatives — small counts, big institutional weight</div>
+      <div class="dumb" id="labDumb"></div>
+      <div class="legend"><span class="b"><i></i>2021</span><span class="c"><i></i>2026</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REFUGEE ============ -->
+<section class="panel" id="p-refugee">
+  <div class="sec-head">
+    <span>National Commission for Refugees &amp; IDPs</span>
+    <h2>Hay'adda Qaxootiga iyo Magangalyo-doonka</h2>
+    <p>Diiwaangelinta qaxootiga iyo hormarinta shuruucda iyo balan-qaadyada caalamiga ah.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Qaxooti iyo magangalyo-doon la diiwaangeliyay</div><div class="val">45,450</div><div class="base">2021: 30,066</div><div class="chip">+51%</div></div>
+    <div class="kpi"><div class="lbl">Balan-qaadyo caalami ah oo qaxootiga</div><div class="val">6</div><div class="base">2021: 4</div><div class="chip">+2</div></div>
+    <div class="kpi"><div class="lbl">Shuruuc la meel-mariyay</div><div class="val">2</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Qaxootiga iyo Magangalyo-doonka</h3>
+      <div class="en">Registered refugees &amp; asylum seekers</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chRefPop"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Shuruucda iyo Balan-qaadyada</h3>
+      <div class="en">Legal frameworks &amp; international commitments</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chRefLaw"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAMILY ============ -->
+<section class="panel" id="p-family">
+  <div class="sec-head">
+    <span>Ministry of Family &amp; Human Rights</span>
+    <h2>Wasaaradda Qoyska iyo Xuquuqda Aadanaha</h2>
+    <p>Xuquuqda aadanaha, badbaadada carruurta iyo adeegga hotline-ka qaranka.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Wicitaanno hotline la diiwaangeliyay</div><div class="val">153,266</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="lbl">Kiisas laga xalliyay wicitaannada</div><div class="val">181</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+    <div class="kpi"><div class="lbl">Sharciyo xuquuqul-insaan ah</div><div class="val">15</div><div class="base">2021: 3</div><div class="chip">×5</div></div>
+    <div class="kpi"><div class="lbl">Qorshayaal iyo siyaasado cusub</div><div class="val">14</div><div class="base">2021: 0</div><div class="chip new">Cusub</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Sharci, Siyaasad iyo Xarumo</h3>
+      <div class="en">Laws, policies, research &amp; child-care centres</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chFamInst"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Adeegga Hotline-ka</h3>
+      <div class="en">National hotline — calls registered vs cases resolved (log scale)</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chFamHot"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CSC ============ -->
+<section class="panel" id="p-csc">
+  <div class="sec-head">
+    <span>National Civil Service Commission</span>
+    <h2>Guddiga Shaqaalaha Rayidka</h2>
+    <p>Kobaca shaqaalaha aan joogtada ahayn iyo qaybinta jinsiga, 2021–2026.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Wadarta shaqaalaha aan joogtada ahayn</div><div class="val">9,759</div><div class="base">2021: 2,665</div><div class="chip">+266%</div></div>
+    <div class="kpi"><div class="lbl">Macalimiin — Gobolka Banaadir</div><div class="val">2,308</div><div class="base">2021: 935</div><div class="chip">+147%</div></div>
+    <div class="kpi"><div class="lbl">Haween ka mid ah shaqaalaha</div><div class="val">3,123</div><div class="base">2021: 894</div><div class="chip">×3.5</div></div>
+    <div class="kpi"><div class="lbl">Shaqaalaha joogtada ah (wadarta)</div><div class="val">5,838</div><div class="base">2021: 5,739</div><div class="chip">+99</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Qaybaha Shaqaalaha</h3>
+      <div class="en">Non-permanent staff by category</div>
+      <div class="chart-wrap" style="height:290px"><canvas id="chCscCat"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Qaybinta Jinsiga</h3>
+      <div class="en">Gender distribution of non-permanent staff</div>
+      <div class="chart-wrap" style="height:290px"><canvas id="chCscGen"></canvas></div>
+    </div>
+    <div class="card full">
+      <h3>Shaqaalaha Joogtada ah — Jinsi</h3>
+      <div class="en">Permanent staff by gender, 2021 vs 2026</div>
+      <table class="simple">
+        <thead><tr><th>Tusmo</th><th style="text-align:right">Lab 2021</th><th style="text-align:right">Dhedig 2021</th><th style="text-align:right">Wadar 2021</th><th style="text-align:right">Lab 2026</th><th style="text-align:right">Dhedig 2026</th><th style="text-align:right">Wadar 2026</th><th style="text-align:right">Koror</th></tr></thead>
+        <tbody>
+          <tr class="total"><td>Shaqaalaha joogtada ah</td><td class="num">4,248</td><td class="num">1,491</td><td class="num">5,739</td><td class="num">4,311</td><td class="num">1,527</td><td class="num">5,838</td><td class="num up">+99</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>Sample dashboard · Xogta: MDA submissions, 2021 baseline vs 2026 · Diyaariyay <b>SNBS — Directorate of Social &amp; Population Statistics</b></footer>
+
+<script>
+/* ---------- tabs ---------- */
+const tabs=document.getElementById('tabs');
+tabs.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='p-'+b.dataset.p));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- chart defaults ---------- */
+const INK='#0d1b2e', SOFT='#3d4f66', SKY='#1f5da8', SAND='#c8b48a', GRID='#e4ecf5';
+Chart.defaults.font.family="'Archivo',sans-serif";
+Chart.defaults.color=SOFT;
+const fmt=n=>n.toLocaleString('en-US');
+const tt={callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.x??c.parsed.y)}`}};
+
+function hbar(id,labels,base,cur,log=false){
+  new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'2021',data:base,backgroundColor:SAND,borderRadius:4,barPercentage:.78},
+      {label:'2026',data:cur,backgroundColor:SKY,borderRadius:4,barPercentage:.78}
+    ]},
+    options:{indexAxis:'y',maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,boxHeight:10,usePointStyle:true,pointStyle:'circle'}},tooltip:tt},
+      scales:{
+        x:{type:log?'logarithmic':'linear',grid:{color:GRID},ticks:{callback:v=>fmt(v)}},
+        y:{grid:{display:false},ticks:{color:INK,font:{weight:600,size:11.5}}}
+      }}});
+}
+function vbar(id,labels,base,cur,log=false){
+  new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'2021',data:base,backgroundColor:SAND,borderRadius:4},
+      {label:'2026',data:cur,backgroundColor:SKY,borderRadius:4}
+    ]},
+    options:{maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,boxHeight:10,usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+      scales:{
+        y:{type:log?'logarithmic':'linear',grid:{color:GRID},ticks:{callback:v=>fmt(v)}},
+        x:{grid:{display:false},ticks:{color:INK,font:{weight:600,size:11.5}}}
+      }}});
+}
+
+/* ---------- overview (log) ---------- */
+hbar('chOverview',
+  ['Diiwaanka bulshada nugul','SPDS (qoysas)','Wicitaanno hotline','Dhalinyaro shaqo-abuur','Tababarro xirfadeed','Shaqaale rayid (CSC)','Qaxooti diiwaangashan'],
+  [200000,1,1,7708,28550,2665,30066],
+  [750000,154569,153266,89958,77850,9759,45450], true);
+
+/* ---------- labour ---------- */
+hbar('chLabBig',
+  ['Diiwaanka bulshada nugul','SPDS qoysas','Dhalinyaro shaqo-abuur','Tababarro xirfadeed'],
+  [200000,1,7708,28550],[750000,154569,89958,77850], true);
+
+hbar('chLabMid',
+  ['Nidaamka shaqo-doonka','Khilaafaad la xalliyay','Shaqo-doon la meeleeyay','Ganacsi yaryar la maalgeliyay'],
+  [0,0,0,0],[800,700,100,50]);
+
+/* dumbbell rows for small-count institutional indicators */
+const dumbData=[
+  ['Xarumaha TVET',0,7],
+  ['Siyaasado/Xeerar (ILO)',0,5],
+  ['Heshiisyo shaqo (bilateral)',1,5],
+  ['Hindiseyaal shaqo-abuur',2,4]
+];
+const maxD=8;
+document.getElementById('labDumb').innerHTML=dumbData.map(([l,b,c])=>{
+  const pb=b/maxD*100, pc=c/maxD*100;
+  return `<div class="drow">
+    <div class="dl">${l}</div>
+    <div class="track">
+      <div class="fill" style="left:${pb}%;width:${pc-pb}%"></div>
+      <div class="dot-b" style="left:${pb}%"></div>
+      <div class="dot-c" style="left:${pc}%"></div>
+    </div>
+    <div class="dnum"><s>${b}</s> → <b>${c}</b></div>
+  </div>`;}).join('');
+
+/* ---------- refugee ---------- */
+vbar('chRefPop',['Qaxooti & magangalyo-doon'],[30066],[45450]);
+vbar('chRefLaw',['Balan-qaadyo caalami ah','Shuruuc la meel-mariyay'],[4,0],[6,2]);
+
+/* ---------- family ---------- */
+hbar('chFamInst',
+  ['Sharciyo xuquuqul-insaan','Qorshayaal & siyaasado','Xarumo cilmi-baaris','Xarumo daryeel carruur'],
+  [3,0,1,0],[15,14,5,3]);
+vbar('chFamHot',['Wicitaanno la diiwaangeliyay','Kiisas la xalliyay'],[1,1],[153266,181],true);
+
+/* ---------- csc ---------- */
+hbar('chCscCat',
+  ['Shaqaale aan joogto ahayn','Macalimiin Banaadir','Marwo Caafimaad'],
+  [1508,935,222],[7181,2308,270]);
+vbar('chCscGen',['Lab','Dhedig','Wadarta'],[1771,894,2665],[6636,3123,9759]);
+</script>
+</body>
+</html>
